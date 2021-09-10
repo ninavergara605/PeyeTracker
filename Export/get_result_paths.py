@@ -1,6 +1,4 @@
-from Import.get_paths import create_path
-
-
+from PathUtilities.general_path_functions import create_path
 class GetResultPaths:
 
 
@@ -33,8 +31,7 @@ class GetResultPaths:
             self._fixations = create_path(
                                     self._user_input['output_directory_path'] 
                                     ,'fixations'
-                                    ,folder=self._user_input['output_folder_name']
-                                    ,nested_folder='processed_eye_movements')
+                                    ,folder='processed_eye_movements')
         return self._fixations
 
     @property
@@ -43,8 +40,7 @@ class GetResultPaths:
             self._test_roi = create_path(
                                     self._user_input['output_directory_path'] 
                                     ,'test_roi'
-                                    ,folder=self._user_input['output_folder_name']
-                                    ,nested_folder='processed_behavior_test')
+                                    ,folder='processed_behavior_test')
         return self._test_roi
     
     @property
@@ -53,8 +49,7 @@ class GetResultPaths:
             self._test_resp_tag = create_path(
                                     self._user_input['output_directory_path'] 
                                     ,'test_tag'
-                                    ,folder=self._user_input['output_folder_name']
-                                    ,nested_folder='processed_behavior_test')
+                                    ,folder='processed_behavior_test')
         return self._test_resp_tag
     
     @property
@@ -63,8 +58,7 @@ class GetResultPaths:
             self._filtered_asc = create_path(
                                                 self._user_input['output_directory_path'] 
                                                 ,'filtered_asc'
-                                                ,folder=self._user_input['output_folder_name']
-                                                ,nested_folder='processed_eye_movements')
+                                                ,folder='processed_eye_movements')
         return self._filtered_asc
 
     @property
@@ -73,8 +67,7 @@ class GetResultPaths:
             self._stimulus_locked_bin = create_path(
                                                 self._user_input['output_directory_path'] 
                                                 ,'stimulus_locked_movements'
-                                                ,folder=self._user_input['output_folder_name']
-                                                ,nested_folder='analysis')
+                                                ,folder='analysis')
         return self._stimulus_locked_bin
     
     @property
@@ -83,8 +76,7 @@ class GetResultPaths:
             self._response_locked_bin = create_path(
                                                 self._user_input['output_directory_path'] 
                                                 ,'response_locked_movements'
-                                                ,folder=self._user_input['output_folder_name']
-                                                ,nested_folder='analysis')
+                                                ,folder='analysis')
         return self._response_locked_bin
     
 
@@ -94,8 +86,7 @@ class GetResultPaths:
             self._duplicate_data_asc = create_path(
                                                 self._user_input['output_directory_path']
                                                 ,'duplicate_data_asc'
-                                                , folder=self._user_input['output_folder_name']
-                                                ,nested_folder='metadata_summary')
+                                                ,folder='metadata_summary')
         return self._duplicate_data_asc
 
     
@@ -105,8 +96,7 @@ class GetResultPaths:
             self._duplicate_data_behavior_test = create_path(
                                                     self._user_input['output_directory_path']
                                                     ,'duplicate_data_behavior_test'
-                                                    , folder=self._user_input['output_folder_name']
-                                                    ,nested_folder='metadata_summaries')
+                                                    ,folder='metadata_summaries')
         return self._duplicate_data_behavior_test
 
     @property
@@ -115,8 +105,7 @@ class GetResultPaths:
             self._fixation_roi = create_path(
                                             self._user_input['output_directory_path']
                                             ,'fixation_roi'
-                                            , folder=self._user_input['output_folder_name']
-                                            ,nested_folder='analysis')
+                                            ,folder='analysis')
         return self._fixation_roi
     
     @property
@@ -125,8 +114,7 @@ class GetResultPaths:
             self._eye_movements = create_path(
                                             self._user_input['output_directory_path']
                                             ,'eye_movements'
-                                            , folder=self._user_input['output_folder_name']
-                                            ,nested_folder='processed_eye_movements')
+                                            ,folder='processed_eye_movements')
         return self._eye_movements
     
     @property
@@ -135,8 +123,7 @@ class GetResultPaths:
             self._saccades = create_path(
                                         self._user_input['output_directory_path']
                                         ,'saccades'
-                                        , folder=self._user_input['output_folder_name']
-                                        ,nested_folder='processed_eye_movements')
+                                        ,folder='processed_eye_movements')
         return self._saccades
 
     @property
@@ -145,8 +132,7 @@ class GetResultPaths:
             self._entropy = create_path(
                                         self._user_input['output_directory_path']
                                         ,'entropy'
-                                        , folder=self._user_input['output_folder_name']
-                                        ,nested_folder='analysis')
+                                        ,folder='analysis')
         return self._entropy
 
     @property
@@ -155,8 +141,7 @@ class GetResultPaths:
             self._stim_locked_summary_all_roi = create_path(
                                         self._user_input['output_directory_path']
                                         ,'stim_locked_summary_all_roi'
-                                        , folder=self._user_input['output_folder_name']
-                                        ,nested_folder='analysis_summaries')
+                                        ,folder='analysis_summaries')
         return self._stim_locked_summary_all_roi
     
     @property
@@ -165,8 +150,7 @@ class GetResultPaths:
             self._resp_locked_summary_all_roi = create_path(
                                         self._user_input['output_directory_path']
                                         ,'resp_locked_summary_all_roi'
-                                        , folder=self._user_input['output_folder_name']
-                                        ,nested_folder='analysis_summaries')
+                                        ,folder='analysis_summaries')
         return self._resp_locked_summary_all_roi
 
     @property
@@ -175,8 +159,7 @@ class GetResultPaths:
             self._stim_locked_summary_filtered_roi = create_path(
                                         self._user_input['output_directory_path']
                                         ,'stim_locked_summary_filtered_roi'
-                                        , folder=self._user_input['output_folder_name']
-                                        ,nested_folder='analysis_summaries')
+                                        ,folder='analysis_summaries')
         return self._stim_locked_summary_filtered_roi
     
     @property
@@ -185,8 +168,7 @@ class GetResultPaths:
             self._resp_locked_summary_filtered_roi = create_path(
                                         self._user_input['output_directory_path']
                                         ,'resp_locked_summary_filtered_roi'
-                                        , folder=self._user_input['output_folder_name']
-                                        ,nested_folder='analysis_summaries')
+                                        ,folder='analysis_summaries')
         return self._resp_locked_summary_filtered_roi
 
     @property
@@ -195,8 +177,7 @@ class GetResultPaths:
             self._missing_asc = create_path(
                                         self._user_input['output_directory_path']
                                         ,'missing_asc'
-                                        , folder=self._user_input['output_folder_name']
-                                        ,nested_folder='metadata_summaries')
+                                        ,folder='metadata_summaries')
         return self._missing_asc
 
     @property
@@ -205,8 +186,7 @@ class GetResultPaths:
             self._bad_response_trials = create_path(
                                         self._user_input['output_directory_path']
                                         ,'bad_response_trials'
-                                        , folder=self._user_input['output_folder_name']
-                                        ,nested_folder='metadata_summaries')
+                                        ,folder='metadata_summaries')
         return self._bad_response_trials
 
     @property
@@ -215,8 +195,7 @@ class GetResultPaths:
             self._no_roi_fixation_trials = create_path(
                                         self._user_input['output_directory_path']
                                         ,'no_roi_fixation_trials'
-                                        ,folder=self._user_input['output_folder_name']
-                                        ,nested_folder='metadata_summaries')
+                                        ,folder='metadata_summaries')
         return self._no_roi_fixation_trials
 
     @property
@@ -225,6 +204,5 @@ class GetResultPaths:
             self._fixation_roi_dropna = create_path(
                                         self._user_input['output_directory_path']
                                         ,'fixation_roi_dropna'
-                                        ,folder=self._user_input['output_folder_name']
-                                        ,nested_folder='analysis')
+                                        ,folder='analysis')
         return self._fixation_roi_dropna

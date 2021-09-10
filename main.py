@@ -5,7 +5,7 @@ from Roi.get_fix_roi import GetFixationRoi
 from Roi.get_test_roi import get_test_roi
 from Bin.bin_movements import bin_fixations
 from UserInput.user_input import validate_user_input
-from Import.get_paths import get_paths_from_directory
+from PathUtilities.get_directory_paths import GetPathsFromDirectory
 from Import.test_import import import_behavior_test
 from Export.export import export
 from Roi.cartesian_to_raster import raster_conversion
@@ -38,13 +38,13 @@ def main(user_input):
     roi_event_map = pd.DataFrame()
     asc_files = []
     if (events_path := user_input['roi_event_map_path']):
-        event_files = get_paths_from_directory(events_path
+        event_files = GetPathsFromDirectory(events_path
                                             ,metadata_keys_raw=user_input['roi_event_map_metadata_keys']
                                             ,valid_metadata_keys=user_input['valid_roi_event_map_metadata_keys']
                                             ,filename_contains=user_input['roi_event_map_filename_contains']
                                             ,target_path_type='.csv'
-                                            )
-        
+                                            ).result
+
         roi_event_map = ImportEventMaps(event_files
                                 ,column_names = user_input['roi_event_map_columns']
                                 ,add_trial_id = user_input['add_roi_event_map_trial_id']
@@ -64,11 +64,11 @@ def main(user_input):
         
 
     if (asc_dir := str(user_input['asc_directory_path'])):
-        asc_files = get_paths_from_directory(asc_dir
+        asc_files = GetPathsFromDirectory(asc_dir
                                         ,metadata_keys_raw=user_input['asc_metadata_keys']
                                         ,valid_metadata_keys=user_input['valid_asc_metadata_keys']
                                         ,target_path_type='.asc'
-                                        )
+                                        ).result
         if asc_files:
             filtered_asc, all_movements, fixations = get_eye_movements(asc_files
                                                                     ,user_input['valid_asc_metadata_keys'][:,1]
@@ -182,9 +182,9 @@ if __name__ == "__main__":
                                  ,'output_folder_name': None
 
                                 # Eye Movement Options
-                                ,'asc_directory_path': None
-                                ,'attach_movement_cols': None
-                                ,'asc_metadata_keys': None
+                                ,'asc_directory_path': 'test_data/asc_files'
+                                ,'attach_movement_cols': ['type']
+                                ,'asc_metadata_keys': ['subject_id', 'block_id']
                                 ,'asc_trial_sets': None
                                 
                                 #Behavior Test Options
@@ -194,19 +194,19 @@ if __name__ == "__main__":
                                 ,'attach_behavior_cols': None
                                 
                                 # Roi Template Options
-                                ,'roi_template_path': None
+                                ,'roi_template_path': 'test_data/roi_templates/roi_template_version_1.xlsx'
                                 ,'calc_roi_raster_coords': False
-                                ,'aspect_ratio': None
+                                ,'aspect_ratio': None 
                                 
                                 # Roi Event Map Options
-                                ,'roi_event_map_metadata_keys' : None
-                                ,'roi_event_map_filename_contains' : None 
-                                ,'roi_event_map_path' : None
-                                ,'roi_event_map_import_skip_rows': None 
-                                ,'roi_event_map_columns' : None
-                                ,'attach_event_cols': None
-                                ,'roi_event_map_trial_column': None
-                                ,'add_roi_event_map_trial_id': False
+                                ,'roi_event_map_path' : 'test_data/roi_event_maps'
+                                ,'roi_event_map_metadata_keys' : ['subject_id', 'block_id']
+                                ,'roi_event_map_trial_column': 'trial_id'   
+                                ,'attach_event_cols': ['phase']             
+                                ,'roi_event_map_filename_contains' : None   
+                                ,'roi_event_map_import_skip_rows': None     
+                                ,'roi_event_map_columns' : None             
+                                ,'add_roi_event_map_trial_id': False        
                                 
                                 # Analysis Options
                                 ,'time_bin_size':250 

@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from .get_fixations import GetFixations
 from .filter_text import FilterText
-from Import.get_paths import get_paths_from_directory
 
 
 def get_eye_movements(asc_files, metadata_keys, trial_sets=None):

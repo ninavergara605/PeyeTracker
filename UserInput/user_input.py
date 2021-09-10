@@ -1,19 +1,44 @@
-from Import.get_paths import normalize_path
+from PathUtilities.general_path_functions import normalize_path, create_path
 import sys
 import inspect
 import pkgutil
 import numpy as np
+from catch_errors import UserInputErrors
+
 
 def validate_user_input(user_input):
     user_input = add_user_scripts(user_input)
     user_input = normalize_user_paths(user_input)
+    user_input = create_output_directory(user_input)
     user_input = strings_to_lower(user_input)
     user_input = get_valid_metadata_keys(user_input)
+
+    UserInputErrors(user_input)
+    return user_input
+
+def create_output_directory(user_input):
+    output_dir_path = user_input['output_directory_path']
+    output_folder = user_input['output_folder_name']
+    
+    if not output_folder:
+        output_folder = 'processed_data'
+    
+    if not output_dir_path:
+        full_output_dir = normalize_path(output_folder)
+    else:
+        full_output_dir = output_dir_path / output_folder
+    
+    if not full_output_dir.is_dir():
+        full_output_dir.mkdir(parents=True)
+    
+    user_input['output_directory_path'] = full_output_dir
     return user_input
 
 def get_valid_metadata_keys(user_input):
-    user_input_keys = [key for key in user_input.keys() if 'metadata_key' in key]
-    for key in user_input_keys:
+    metadata_keys = [key for key in user_input.keys() 
+                                if ('metadata_key' in key) & (user_input[key] != None)
+    ]
+    for key in metadata_keys:
         valid_key = valid_key = ''.join(['valid_', key])
         user_input[valid_key] = filter_metadata_keys(user_input[key])
     return user_input
