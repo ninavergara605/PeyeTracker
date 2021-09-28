@@ -1,45 +1,56 @@
 import pandas as pd
+from ResultContainers.result_containers import create_result_paths
 
-def export(user_input, behavior_test, all_movements, roi_event_map, test_tag):
-    global behavior_data
-    global movement_data
-    global event_data
 
+def export(result_dfs, user_input):
+
+    result_paths = create_result_paths(user_input['output_directory_path'])
     behavior_data = pd.DataFrame()
     event_data = pd.DataFrame()
     movement_data = pd.DataFrame()
+    test_tag = pd.DataFrame()
 
     if (behavior_cols := user_input['attach_behavior_cols']):
-        behavior_data = check_columns(behavior_test[behavior_cols])
+        behavior_data = check_columns(result_dfs['behavior_test'][behavior_cols])
     if (eye_movement_cols := user_input['attach_movement_cols']):
-        movement_data = check_columns(all_movements[eye_movement_cols])
+        movement_data = check_columns(result_dfs['eye_movements'][eye_movement_cols])
     if (event_cols := user_input['attach_event_cols']):
-        event_data = check_columns(roi_event_map[event_cols])
+        event_data = check_columns(result_dfs['roi_event_map'][event_cols])
         event_data = event_data.reset_index()
-    def _export(df, path):
-        df = check_columns(df)    
-        if not movement_data.empty:
-            if not any(x in str(path) for x in ['filtered_asc', 'fixation']):
-                df = merge_dfs(df, movement_data)
+    
+    for tag, df in result_dfs.items():
+        if (not df.empty) and (tag in result_paths.keys()):
+            print(tag)
+            path = result_paths[tag]
+            _export(df, path, movement_data, behavior_data,event_data, test_tag)
+
+def _export(df, path, movement_data, behavior_data, event_data, test_tag):
+    if not path.parent.is_dir():
+        path.parent.mkdir(parents=True)
+
+    df = check_columns(df)    
+    if not movement_data.empty:
+        if not any(x in str(path) for x in ['filtered_asc', 'fixation']):
+            df = merge_dfs(df, movement_data)
+    
+    if not behavior_data.empty:
+        if not 'behavior_test' in str(path):
+            df = merge_dfs(df, behavior_data)
+    
+    if not test_tag.empty:
+        if not 'test_tag' in str(path):
+            df = merge_dfs(df, test_tag)
+    if not event_data.empty:
+        df = merge_dfs(df, event_data)
         
-        if not behavior_data.empty:
-            if not 'behavior_test' in str(path):
-                df = merge_dfs(df, behavior_data)
+    try:
+        df = df.applymap(str)
         
-        if not test_tag.empty:
-            if not 'test_tag' in str(path):
-                df = merge_dfs(df, test_tag)
-        if not event_data.empty:
-            df = merge_dfs(df, event_data)
-            
-        try:
-            df = df.applymap(str)
-           
-        except AttributeError:
-            pass
-        with open(path, 'w') as f:
-            df.to_csv(f, header=True)
-    return _export
+    except AttributeError:
+        pass
+    with open(path, 'w') as f:
+        df.to_csv(f, header=True)
+
 
 def check_columns(df):
     if 'level_0' in df.columns:
