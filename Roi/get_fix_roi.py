@@ -12,9 +12,12 @@ class GetFixationRoi:
                 ,roi_metadata_keys = None
                 ,test_trial_col = None
                 ):
-        self._fixations = fixations
+        self._fixations = fixations.reset_index()
         self._fixation_metadata_keys = fixation_metadata_keys
-        self._roi = roi
+        self._roi = roi.reset_index()
+        if 'level_0' in self._roi.columns:
+            self._roi.drop('level_0', axis='columns', inplace=True)
+ 
         self._roi_metadata_keys = roi_metadata_keys
         self._test_trial_col = test_trial_col
         self.format_dfs()
@@ -66,10 +69,10 @@ class GetFixationRoi:
         return fix_roi
 
     def drop_columns(fix_with_roi, fix_merge_keys):
-        _drop_columns = ['level_0', 'index']
-        drop_these = [col for col in fix_with_roi if any(col == drop_col for drop_col in _drop_columns)]
+        drop_columns = ['level_0', 'index']
+        drop_these = [col for col in fix_with_roi if col in drop_columns]
         if 'trial_id' in fix_with_roi.columns:
-            #assume that the user defined trial column has already been added to the index and drop the duplicate fixation column
+            # Assume that the user defined trial column has already been added to the index and drop the duplicate fixation column
             drop_these.append('trial_id')
         if drop_these:
             return fix_with_roi.drop(columns=drop_these)
@@ -82,8 +85,7 @@ class GetFixationRoi:
             common_keys.append(self._test_trial_col)
         elif 'trial_id' in self._roi.columns:
             common_keys.append('trial_id')
-        
-        return  common_keys
+        return  list(set(common_keys))
 
     def tag_columns(self, fixations, roi):
         renamed = []
@@ -97,13 +99,13 @@ class GetFixationRoi:
         return renamed
 
     def create_merge_keys(self):
-        common_cols = self._roi.columns[self._roi.columns.isin(self._fixations.columns)]
+        common_cols = self._roi.columns[self._roi.columns.isin(self._fixations.columns)].values
         
         if self._test_trial_col:
-            fix_merge_keys = [*common_cols, 'trial_id']
-            roi_merge_keys = [*common_cols, self._test_trial_col]
+            fix_merge_keys = [*list(common_cols), 'trial_id']
+            roi_merge_keys = [*list(common_cols), self._test_trial_col]
         else:
-            fix_merge_keys =  roi_merge_keys = common_cols
+            fix_merge_keys =  roi_merge_keys = list(common_cols)
         return fix_merge_keys, roi_merge_keys
 
     def get_constrained_time(self, df):

@@ -14,7 +14,6 @@ def get_missing_data(fixations, test_tag, movement_roi):
             movement_roi_metadata = extract_metadata(movement_roi)
             missing_roi_fixations = get_no_roi_fixations(movement_roi_metadata, fixation_metadata)
     if not test_tag.empty:
-        print(test_tag)
         bad_resp_trials = get_bad_resp_trials(test_tag)
     
     return bad_resp_trials, missing_roi_fixations, missing_asc_data

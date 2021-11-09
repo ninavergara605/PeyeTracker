@@ -1,3 +1,4 @@
+from numpy.lib.twodim_base import tri
 from PathUtilities.general_path_functions import normalize_path, create_path
 import sys
 import inspect
@@ -39,7 +40,7 @@ def get_valid_metadata_keys(user_input):
                                 if ('metadata_key' in key) & (user_input[key] != None)
     ]
     for key in metadata_keys:
-        valid_key = valid_key = ''.join(['valid_', key])
+        valid_key = ''.join(['valid_', key])
         user_input[valid_key] = filter_metadata_keys(user_input[key])
     return user_input
 
@@ -51,13 +52,14 @@ def filter_metadata_keys(raw_keys):
 
 def strings_to_lower(user_input):
     for key, value in user_input.items():
-        if isinstance(value, str):
+        if 'trial_set' in key:
+            lowered_value = lower_trial_set_struct(value)
+        elif isinstance(value, str):
             lowered_value = value.lower()
         elif isinstance(value, dict):
             lowered_value = lower_strings_dict(value)
         elif isinstance(value, tuple):
             lowered_value = lower_strings_tuple(value)
-            print(lowered_value)
         elif isinstance(value, list):
             lowered_value = lower_strings_list(value)
         else:
@@ -67,11 +69,21 @@ def strings_to_lower(user_input):
             user_input[key] = lowered_value
     return user_input
 
+def lower_trial_set_struct(value):
+    lowered = []
+    for trial_set in value:
+        lowered_labels = tuple([val.lower() for val in trial_set[-1]])
+        lowered_col_name = trial_set[0].lower()
+        lowered.append((lowered_col_name, trial_set[1], lowered_labels))
+    return lowered
 
 def lower_strings_dict(_dict):
     lowered_dict = {}
     for key, value in _dict.items():
-        lowered_key = key.lower()
+        try:
+            lowered_key = key.lower()
+        except AttributeError:
+            lowered_key = key
         if isinstance(value, str):
             lowered_dict[lowered_key] = value.lower()
         elif isinstance(value, list):
@@ -94,11 +106,9 @@ def lower_strings_tuple(_tuple):
     return tuple(lowered)
 
 def lower_strings_list(_list):
-    if isinstance(_list[0], tuple):
-        lowered_list = [lower_strings_tuple(x) for x in _list]
-    else:
+    if _list:
         lowered_list = [x.lower() if isinstance(x, str) else x for x in _list]
-    return lowered_list
+        return lowered_list
 
 def normalize_user_paths(user_input):
     '''

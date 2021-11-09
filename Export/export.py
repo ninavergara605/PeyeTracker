@@ -20,7 +20,6 @@ def export(result_dfs, user_input):
     
     for tag, df in result_dfs.items():
         if (not df.empty) and (tag in result_paths.keys()):
-            print(tag)
             path = result_paths[tag]
             _export(df, path, movement_data, behavior_data,event_data, test_tag)
 
@@ -67,7 +66,4 @@ def merge_dfs(df1, df2):
     df1_col == df2_col for df2_col in df2.columns)]
     
     merged = df1.merge(df2, on=common_cols, how='left')
-    
     return merged
-    #except:
-    #    return df1

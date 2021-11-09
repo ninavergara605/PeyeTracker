@@ -8,6 +8,7 @@ def get_eye_movements(asc_files, metadata_keys, trial_sets=None):
     metadata_keys = list(metadata_keys)
     filtered_asc = FilterText(asc_files).result
     raw_movements = format_movement_df(filtered_asc, metadata_keys) 
+    
     if trial_sets:       
         raw_movements = add_trial_set_labels(raw_movements, trial_sets)
     raw_fixations = raw_movements[raw_movements['type'].isin(['EFIX'])].dropna(axis=1, how='all')
@@ -18,13 +19,12 @@ def add_trial_set_labels(raw_movements, trial_sets):
     for _set in trial_sets:
         column_name = _set[0]
         raw_movements[column_name] = np.nan
-        for label, trial_range in zip(_set[1], _set[2]):
+        for label, trial_range in zip(_set[2], _set[1]):
             
             if len(trial_range) == 3:
                 in_range_filter = raw_movements.index.get_level_values('trial_id').isin(list(range(trial_range[0],trial_range[1]+1, trial_range[2])))
             else:
                 in_range_filter = raw_movements.index.get_level_values('trial_id').isin(list(range(trial_range[0], trial_range[1]+1)))
-
             
             raw_movements[column_name] = np.where(in_range_filter, label, raw_movements[column_name])
     return raw_movements

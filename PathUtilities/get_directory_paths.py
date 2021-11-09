@@ -29,8 +29,12 @@ class GetPathsFromDirectory:
                                 for root, _, files in os.walk(self._path)
                                     for file in files
             ]
+            
             target_paths = self.filter_files(directory_files)
             
+            if not target_paths:
+                print(f"Could not find paths with {self._target_path_type}")
+                return 
         else:
             target_paths.append(self._path)
 
@@ -113,10 +117,12 @@ class LabelPaths:
         for path, metadata in zip(self._paths, file_metadata):
             if (_len := len(metadata) == num_fields_in_filename):
                 filtered_data = [metadata[int(i)] for i in self._valid_metadata_keys[:,0]]
+                '''
                 if not isinstance(filtered_data[1], int):
                     print('invalid path: ', filtered_data, path)
                 else:
-                    labeled_paths.append(Subject._make([*filtered_data, path]))
+                '''
+                labeled_paths.append(Subject._make([*filtered_data, path]))
             else:
                 invalid_metadata[_len].append([metadata, path])
         ### add error handling if invalid metadata

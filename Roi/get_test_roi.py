@@ -24,9 +24,10 @@ def pair_dynamic_roi(test_behavior, roi_template):
 def verify_event_columns(test_behavior, roi_labels):
     test_event_columns = roi_labels['dynamic_event_column']
     missing_cols = test_event_columns[~test_event_columns.isin(test_behavior.columns)]
+
     if not missing_cols.empty:
         print('Could not find {} dynamic event column(s) in roi event map or behavior test'.format(missing_cols))
-        return test_event_columns[~missing_cols].values 
+        return test_event_columns[~test_event_columns.isin(missing_cols)].values 
     return test_event_columns.values
 
 def pair_static_roi(test_behavior,roi_template):
