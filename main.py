@@ -11,18 +11,18 @@ if __name__ == "__main__":
         , 'attach_movement_cols': None
 
         # Eye Movement Options
-        , 'asc_directory_path': r'C:\Users\janavic2\Downloads\PeyeTracker\test_data\asc_files'
-        , 'asc_metadata_keys': ['subject_id', 'block_id']
+        , 'asc_directory_path': ''
+        , 'asc_metadata_keys': None
 
         # Roi Template Options
-        , 'roi_template_path': r'C:\Users\janavic2\Downloads\PeyeTracker\test_data\roi_templates\roi_template_version_1.xlsx'
+        , 'roi_template_path': ''
         , 'calc_roi_raster_coords': False
         , 'aspect_ratio': None
 
         # Roi Event Map Options
-        , 'roi_event_map_path': r'C:\Users\janavic2\Downloads\PeyeTracker\test_data\roi_event_maps'
-        , 'roi_event_map_metadata_keys': ['subject_id', 'block_id']
-        , 'roi_event_map_trial_column': 'trial_id'
+        , 'roi_event_map_path': ''
+        , 'roi_event_map_metadata_keys': []
+        , 'roi_event_map_trial_column': ''
         , 'roi_event_map_extension': '.csv'
 
         , 'roi_event_map_filename_contains': None
