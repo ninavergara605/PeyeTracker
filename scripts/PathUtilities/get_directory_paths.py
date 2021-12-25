@@ -33,14 +33,14 @@ class GetPathsFromDirectory:
         if not target_paths:
             raise Exception(f"Could not find paths with {self._target_path_type}")
 
-        normalized_paths = map(normalize_path, target_paths)
+        normalized_paths = list(map(normalize_path, target_paths))
         try:
             labeled_paths = LabelPaths(normalized_paths
                                        , self._metadata_keys_raw
                                        , self._valid_metadata_keys
                                        ).result
             return labeled_paths
-        except:
+        except Exception:
             return normalized_paths
 
     def filter_files(self, file_paths):
@@ -76,7 +76,7 @@ class LabelPaths:
         if invalid_metadata:
             print(f"Cannot match filename contents of {invalid_metadata} to the metadata keys {self._metadata_keys_raw}")
 
-        labeled_paths = self.make_subjects(invalid_metadata)
+        labeled_paths = self.make_subjects(valid_metadata)
         filtered = LabelPaths.filter_metadata_duplicates(labeled_paths)
         return filtered
 
@@ -113,7 +113,7 @@ class LabelPaths:
         Subject = namedtuple('Subject', path_keys)
         labeled_paths = []
 
-        for path, metadata in zip(self._paths, file_metadata):
+        for metadata, path in file_metadata:
             filtered_data = [metadata[int(i)] for i in self._valid_metadata_keys[:, 0]]
             labeled_paths.append(Subject._make([*filtered_data, path]))
         return labeled_paths

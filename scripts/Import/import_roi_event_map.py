@@ -25,11 +25,11 @@ class ImportEventMaps:
         events = self.create_df()
         if self._add_trial_id:
             events['trial_id'] = events.groupby(level=events.index.names[:-1]).cumcount() + 1
-        events.set_index([self._trial_column], append=True, inplace=True)
+        events.set_index([self._trial_column], append=True, inplace=True, drop=True)
 
         if self._trial_sets:
             self.add_trial_set_labels(events)
-        return events, self._trial_column
+        return events
 
     def create_df(self):
         read_csv_kwargs = {'header': self._header, 'names': self._column_names}
@@ -51,7 +51,7 @@ class ImportEventMaps:
             missing_metadata_cols = list(set(self._metadata_keys) - set(events.columns.values))
             if missing_metadata_cols:
                 raise Exception(f"Could not find the metadata column(s): {missing_metadata_cols} in roi event maps")
-            events.set_index(self._metadata_keys, inplace=True)
+            events.set_index(self._metadata_keys, inplace=True, drop=True)
         else:
             # Metadata was pulled from filenames and should be used for data concatenation
             dfs = np.array([[subject[:-1], reading_func(subject.path, **read_csv_kwargs)]

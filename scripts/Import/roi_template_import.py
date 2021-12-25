@@ -7,7 +7,7 @@ class ImportRoiTemplate:
         self._roi_template_path = user_input['roi_template_path']
         self._calc_raster_coordinates = user_input['calc_roi_raster_coords']
         self._aspect_ratio = user_input["aspect_ratio"]
-        self._asc_metadata_keys = self.user_input['valid_asc_metadata_keys'][:, 1]
+        self._asc_metadata_keys = user_input['valid_asc_metadata_keys'][:, 1]
         self._asc_files = asc_files
         self.result = self.roi_template_import()
 

@@ -54,7 +54,7 @@ def get_trial_info(df, metadata_keys):
 
     df['trial_id'] = df[df.type == 'START'].groupby(level=metadata_keys).cumcount() + 1
     df['trial_id'].ffill(axis=0, inplace=True)
-    df = df[df.type != 'START'].set_index('trial_id', append=True)
+    df = df[df.type != 'START'].set_index('trial_id', append=True, drop=True)
     return df
 
 

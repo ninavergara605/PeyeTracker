@@ -15,7 +15,7 @@ if __name__ == "__main__":
         , 'asc_metadata_keys': ['subject_id', 'block_id']
 
         # Roi Template Options
-        , 'roi_template_path': None
+        , 'roi_template_path': r'C:\Users\janavic2\Downloads\PeyeTracker\test_data\roi_templates\roi_template_version_1.xlsx'
         , 'calc_roi_raster_coords': False
         , 'aspect_ratio': None
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         , 'add_roi_event_map_trial_id': False
 
 
-        # Trial Set Options (creates new columns based on trial set ranges)
+        # Trial Set Options (creates new columns based on trial ranges)
         , 'roi_event_map_trial_sets': None
         , 'asc_trial_sets': None
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         , 'summary_filter_for': None
 
         # Entropy Options
-        , 'calculate_entropy': False
+        , 'calculate_entropy': True
         , 'target_roi_entropy': None
         , 'exclude_diagonals': False
 

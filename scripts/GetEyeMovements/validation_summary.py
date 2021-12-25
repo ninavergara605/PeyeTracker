@@ -6,8 +6,7 @@ def extract_calibration_data(all_subjects):
     validation_data_raw = FilterText(all_subjects, search_for=['VALIDATE', 'CAL VALIDATION']).result
     group_by = [name for name in validation_data_raw.index.names if name != 'file_position']
     validation_summary = validation_data_raw.groupby(group_by).apply(retrieve_data)
-    print(validation_summary)
-
+    return validation_summary
 
 def retrieve_data(group):
     last_val_idx = group[group[0] == 'CAL'].index.get_level_values('file_position').max()

@@ -23,7 +23,6 @@ class Dispatch:
         self.main_dispatch()
 
     def main_dispatch(self):
-
         self.eye_tracking_dispatch()
         self.roi_dispatch()
         self.analysis_dispatch()
@@ -39,6 +38,7 @@ class Dispatch:
                                                 , filename_contains=self.user_input['roi_event_map_filename_contains']
                                                 , target_path_type=self.user_input['roi_event_map_extension']
                                                 ).result
+
             self.results['roi_event_map'] = ImportEventMaps(event_files, self.user_input).result
             print('done: ', 'roi_event_map')
 
@@ -46,21 +46,21 @@ class Dispatch:
             self.results['test_resp_tags'] = test_tag(self.results['behavior_test']).result
 
         if self.user_input['roi_template_path']:
-            self._roi_template = ImportRoiTemplate(self.user_input, asc_files=self._asc_files)
-            print('done: ', 'roi_template')
-        if self._roi_template and self.results['roi_event_map']:
+            self._roi_template = ImportRoiTemplate(self.user_input, asc_files=self._asc_files).result
+
+        if not self._roi_template.empty and not self.results['roi_event_map'].empty:
             self.results['trial_roi'] = get_test_roi(self.results['roi_event_map'], self._roi_template)
 
     def eye_tracking_dispatch(self):
         if asc_dir := str(self.user_input['asc_directory_path']):
-            asc_files = GetPathsFromDirectory(asc_dir
+            self._asc_files = GetPathsFromDirectory(asc_dir
                                               , metadata_keys_raw=self.user_input['asc_metadata_keys']
                                               , valid_metadata_keys=self.user_input['valid_asc_metadata_keys']
                                               , target_path_type='.asc'
                                               ).result
-            if asc_files:
+            if self._asc_files:
                 self.results['calibration_summary'] = extract_calibration_data(self._asc_files)
-                eye_tracking_res = get_eye_movements(asc_files
+                eye_tracking_res = get_eye_movements(self._asc_files
                                                      , self.user_input['valid_asc_metadata_keys'][:, 1]
                                                      , trial_sets=self.user_input['asc_trial_sets'])
                 self.results['filtered_asc'], self.results['eye_movements'], self.results[
@@ -74,7 +74,8 @@ class Dispatch:
                                          , fixation_metadata_keys=self.user_input['valid_asc_metadata_keys'][:, 1]
                                          , roi_metadata_keys=self.user_input['roi_event_map_metadata_keys']
                                          , test_trial_col=self.user_input['roi_event_map_trial_column']).result
-            print('done: ', 'fixation_roi_all')
+            self.results['fixation_roi'], self.results['fixation_roi_condensed'] = fix_roi_dfs
+            print('done: ', 'fixation_roi')
 
         if not self.results['fixation_roi'].empty:
             self.results['stimulus_locked_fixations'], self.results['response_locked_fixations'], self.results[
