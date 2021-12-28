@@ -3,7 +3,7 @@ import numpy as np
 
 
 class GetFixations:
-
+# Convert this class to function
 
     def __init__(self, raw_fixations, metadata_keys):
         self._raw_fixations = raw_fixations
