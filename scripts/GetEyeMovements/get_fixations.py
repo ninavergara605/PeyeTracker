@@ -18,13 +18,7 @@ class GetFixations:
                                     ,6:'y' 
                                     ,7:'avg_pupil_size'
                                     }, inplace=True)
-        '''        
-        fixations.rename(columns={
-                                     '5':'x' 
-                                    ,'6':'y' 
-                                    ,'7':'avg_pupil_size'
-                                    }, inplace=True)
-        '''
+
         fixations = fixations.groupby(self._metadata_keys).filter(lambda x: len(x) > 1) #returns trials with more than one fixation
         fixations['fix_id'] = np.arange(1, len(fixations) + 1)
         return fixations
