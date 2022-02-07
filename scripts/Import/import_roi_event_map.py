@@ -29,6 +29,7 @@ class ImportEventMaps:
 
         if self._trial_sets:
             self.add_trial_set_labels(events)
+        events.columns = [x.lower() for x in events.columns]
         return events
 
     def create_df(self):

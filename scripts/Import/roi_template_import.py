@@ -14,7 +14,7 @@ class ImportRoiTemplate:
     def roi_template_import(self):
         template_df = pd.read_excel(self._roi_template_path, header=[0, 1])
         template_df = template_df.apply(pd.to_numeric, errors='ignore')
-        template_df = template_df.apply(lambda x: x.str.lower() if (x.dtype == 'object') else x)
+        template_df = template_df.applymap(lambda x: x.lower() if isinstance(x, str) else x)
 
         static = template_df['static'].apply(ImportRoiTemplate.get_coords_and_ranges, axis=1)
         dynamic = template_df['dynamic_event_options'].apply(ImportRoiTemplate.get_coords_and_ranges, axis=1)
