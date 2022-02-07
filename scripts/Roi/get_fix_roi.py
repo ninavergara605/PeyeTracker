@@ -28,15 +28,25 @@ class GetFixationRoi:
         self._fixations = fixations.reset_index()
         self._fixation_metadata_keys = fixation_metadata_keys
         self._roi = roi.reset_index()
-        if 'level_0' in self._roi.columns:
-            self._roi.drop('level_0', axis='columns', inplace=True)
-
         self._roi_metadata_keys = roi_metadata_keys
         self._test_trial_col = test_trial_col
+
+        if self._roi.loc[self._roi['stop'] == 'trial end', 'stop'].any():
+            self._roi = self.replace_trial_end()
+
         self.format_dfs()
         self.result = self.get_fixation_roi()
 
+    def replace_trial_end(self):
+        max_trial_end = self._fixations['stop'].max() + 1
+        roi = self._roi.copy()
+        roi.loc[roi['stop'] == 'trial end', 'stop'] = max_trial_end
+        return roi
+
     def format_dfs(self):
+        if 'level_0' in self._roi.columns:
+            self._roi.drop('level_0', axis='columns', inplace=True)
+
         filter_out = ['block_relative_start', 'block_relative_stop', 'eprime_duration', 'avg_pupil_size', 'trial_start',
                       'type', 'eye', 'type_count']
         fixations = self._fixations[self._fixations.columns.difference(filter_out)]
@@ -45,13 +55,14 @@ class GetFixationRoi:
     def get_fixation_roi(self):
         fix_roi = self.add_roi()
         valid_pairs = self.find_valid_pairings(fix_roi)
-        fix_roi[~fix_roi.index.isin(valid_pairs.index)] = np.nan # If fixations arent in an roi, fill the row in NaN
+        fix_roi[~fix_roi.index.isin(valid_pairs.index)] = np.nan  # If fixations arent in an roi, fill the row in NaN
 
         if fix_roi.columns.isin(['start_roi', 'stop_roi']).all():
             fix_roi = self.get_constrained_time(fix_roi)
         return fix_roi, valid_pairs
 
     def find_valid_pairings(self, fix_roi):
+        fix_roi = fix_roi.apply(pd.to_numeric, errors='ignore')
         # Returns the rows in which the fixations are inside roi coordinate and/or time boundaries
         coord_filter = '(top_left_y <= y_fix) & (bottom_right_y >= y_fix) & (top_left_x <= x_fix) & (bottom_right_x >= x_fix)'
         time_filter = '(start_fix < stop_roi) & (stop_fix > start_roi)'
