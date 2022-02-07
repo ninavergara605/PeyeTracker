@@ -11,24 +11,24 @@ if __name__ == "__main__":
         , 'attach_movement_cols': None
 
         # Eye Movement Options
-        , 'asc_directory_path': ''
-        , 'asc_metadata_keys': None
+        , 'asc_directory_path': '/Users/ninavergara/Desktop/eyetrack_app/PeyeTracker/test_data/asc_files'
+        , 'asc_metadata_keys': ['subject_id', 'block_id']
 
         # Roi Template Options
-        , 'roi_template_path': ''
+        , 'roi_template_path': '/Users/ninavergara/Desktop/eyetrack_app/PeyeTracker/test_data/roi_templates/roi_template_vers_2.xlsx'
         , 'calc_roi_raster_coords': False
         , 'aspect_ratio': None
 
         # Roi Event Map Options
-        , 'roi_event_map_path': ''
-        , 'roi_event_map_metadata_keys': []
-        , 'roi_event_map_trial_column': ''
+        , 'roi_event_map_path': '/Users/ninavergara/Desktop/eyetrack_app/PeyeTracker/test_data/roi_event_maps'
+        , 'roi_event_map_metadata_keys': ['subject_id', 'block_id']
+        , 'roi_event_map_trial_column': 'trial_id'
         , 'roi_event_map_extension': '.csv'
 
         , 'roi_event_map_filename_contains': None
         , 'roi_event_map_import_skip_rows': None
         , 'roi_event_map_columns': None
-        , 'add_roi_event_map_trial_id': False
+        , 'add_roi_event_map_trial_id': True
 
 
         # Trial Set Options (creates new columns based on trial ranges)
