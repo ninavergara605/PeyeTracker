@@ -11,19 +11,25 @@ if __name__ == "__main__":
         , 'attach_movement_cols': None
 
         # Eye Movement Options
-        , 'asc_directory_path': '/Users/ninavergara/Desktop/eyetrack_app/PeyeTracker/test_data/asc_files'
-        , 'asc_metadata_keys': ['subject_id', 'block_id']
+        , 'asc_directory_path': ''
+        , 'asc_metadata_keys': []
 
-        # Roi Template Options
-        , 'roi_template_path': '/Users/ninavergara/Desktop/eyetrack_app/PeyeTracker/test_data/roi_templates/roi_template_vers_2.xlsx'
-        , 'calc_roi_raster_coords': False
-        , 'aspect_ratio': None
+        # Roi Template and iPosition Options
+        , 'roi_template_path': None
+        , 'calc_roi_raster_coords': True
+        , 'aspect_ratio': ()
+
+        , 'actual_coordinate_path': ''
+        , 'actual_coordinate_time_window': ()
+        , 'coordinate_labels': None
+        , 'roi_width': None
+        , 'roi_height': None
 
         # Roi Event Map Options
-        , 'roi_event_map_path': '/Users/ninavergara/Desktop/eyetrack_app/PeyeTracker/test_data/roi_event_maps'
-        , 'roi_event_map_metadata_keys': ['subject_id', 'block_id']
-        , 'roi_event_map_trial_column': 'trial_id'
-        , 'roi_event_map_extension': '.csv'
+        , 'roi_event_map_path': None
+        , 'roi_event_map_metadata_keys': []
+        , 'roi_event_map_trial_column': None
+        , 'roi_event_map_extension': None
 
         , 'roi_event_map_filename_contains': None
         , 'roi_event_map_import_skip_rows': None
@@ -36,7 +42,7 @@ if __name__ == "__main__":
         , 'asc_trial_sets': None
 
         # Binning Options
-        , 'time_bin_size': 250
+        , 'time_bin_size': None
         , 'summary_filter_out': None
         , 'summary_filter_for': None
 
@@ -48,6 +54,6 @@ if __name__ == "__main__":
         # Plotting Options
         , 'plot_fixations': False
         , 'group_by': []
-        , 'figure_shape': None
+        , 'figure_shape': ()
     })
 Dispatch(user_input)
