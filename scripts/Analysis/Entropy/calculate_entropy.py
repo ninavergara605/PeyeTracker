@@ -57,7 +57,7 @@ class CalculateEntropy:
         for matrix in self.transition_probabilities:
             np.nan_to_num(matrix, copy=False)
             '''
-            Since the sum of each row is 1, our matrix is row stochastic.
+            Since the sum of each col is 1, our matrix is col stochastic.
             We'll transpose the matrix to calculate eigenvectors of the stochastic rows.
             '''
             transition_matrix_transp = matrix.T
