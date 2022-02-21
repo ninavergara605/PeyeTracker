@@ -1,4 +1,5 @@
 __pycache__/
 *.idea
 *.pytest_cache
+*.DS_store
 processed_data/
