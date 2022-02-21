@@ -20,7 +20,7 @@ class GetTimeBinRanges:
             start_col, stop_col = 'start_fix', 'stop_fix'
         else:
             return
-        range_start = 0#math.floor(self._fix_roi[start_col].min())
+        range_start = 0
         range_stop = math.ceil(self._fix_roi[stop_col].max())
         bins = pd.interval_range(range_start, range_stop, freq=self._frequency)
         return bins
