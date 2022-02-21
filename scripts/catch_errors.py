@@ -47,3 +47,9 @@ def exception_handler(exception_type, exception, traceback, debug_hook=sys.excep
 
 
 sys.excepthook = exception_handler
+
+
+def fixations_in_roi(fixations, trial_roi, fix_roi):
+    if not (fixations.empty and trial_roi.empty):
+        if fix_roi.empty:
+            raise Exception("Could not find fixations within any ROI boundaries")
