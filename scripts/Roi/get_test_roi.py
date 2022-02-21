@@ -45,9 +45,9 @@ def verify_event_columns(test_behavior, roi_labels):
 
 def pair_static_roi(test_behavior, roi_template):
     # Creates an empty dataframe with metadata index and creates a key column = 1 for cross join
-    static_df = pd.DataFrame(index=test_behavior.index).assign(key=1)
+    static_df = pd.DataFrame(index=test_behavior.index).assign(key=1).reset_index().drop(columns=['index'])
     # Extracts the static roi data from template and creates a key column = 1 for cross join
-    static_roi = roi_template['static'].dropna().reset_index().assign(key=1)
+    static_roi = roi_template['static'].dropna().assign(key=1)
     # Preforms a cartesian cross join- assigning every static roi to each subject/trial index
     test_roi_static = static_df.merge(static_roi, on='key', how='left').drop('key', axis=1)
     return test_roi_static
