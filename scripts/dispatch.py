@@ -3,14 +3,16 @@ from scripts.ResultContainers import initialize_result_dict
 from scripts.GetEyeMovements import get_eye_movements
 from scripts.Roi.get_fix_roi import GetFixationRoi
 from scripts.Roi import get_test_roi
-from scripts.Analysis.Bin import bin_fixations
+from scripts.Analysis.Bin import BinningDispatch
 from scripts.PathUtilities import GetPathsFromDirectory
 from scripts.Export import export
 from scripts.Import import ImportEventMaps
 from scripts.Analysis.Entropy import CalculateEntropy
-#from scripts.Plot.plot_fixations import PlotFixations
+from scripts.Plot.plot_fixations import PlotFixations
 from scripts.GetEyeMovements.validation_summary import extract_calibration_data
 from scripts.Import import ImportRoiTemplate
+from scripts.Import import ImportIposition
+from scripts.catch_errors import fixations_in_roi
 
 
 class Dispatch:
@@ -26,7 +28,7 @@ class Dispatch:
         self.eye_tracking_dispatch()
         self.roi_dispatch()
         self.analysis_dispatch()
-        #self.plotting_dispatch()
+        self.plotting_dispatch()
         export(self.results, self.user_input)
 
     def roi_dispatch(self):
@@ -51,18 +53,31 @@ class Dispatch:
         if not self._roi_template.empty and not self.results['roi_event_map'].empty:
             self.results['trial_roi'] = get_test_roi(self.results['roi_event_map'], self._roi_template)
 
+        if self.user_input['actual_coordinate_path']:
+            self.results['actual_coordinates'] = ImportIposition(self.user_input
+                                                                 , self.results['trial_roi']
+                                                                 , self.results['fixations']
+                                                                 , self._asc_files).result
+
+        if not self.results['trial_roi'].empty and not self.results['actual_coordinates'].empty:
+            self.results['trial_roi'] = pd.concat([self.results['trial_roi'], self.results['actual_coordinates']])
+        elif self.results['trial_roi'].empty and not self.results['actual_coordinates'].empty:
+            self.results['trial_roi'] = self.results['actual_coordinates']
+
     def eye_tracking_dispatch(self):
         if asc_dir := str(self.user_input['asc_directory_path']):
             self._asc_files = GetPathsFromDirectory(asc_dir
-                                              , metadata_keys_raw=self.user_input['asc_metadata_keys']
-                                              , valid_metadata_keys=self.user_input['valid_asc_metadata_keys']
-                                              , target_path_type='.asc'
-                                              ).result
+                                                    , metadata_keys_raw=self.user_input['asc_metadata_keys']
+                                                    , valid_metadata_keys=self.user_input['valid_asc_metadata_keys']
+                                                    , target_path_type='.asc'
+                                                    ).result
+
             if self._asc_files:
                 self.results['calibration_summary'] = extract_calibration_data(self._asc_files)
                 eye_tracking_res = get_eye_movements(self._asc_files
                                                      , self.user_input['valid_asc_metadata_keys'][:, 1]
                                                      , trial_sets=self.user_input['asc_trial_sets'])
+
                 self.results['filtered_asc'], self.results['eye_movements'], self.results[
                     'fixations'] = eye_tracking_res
                 print('done: ', 'fixations')
@@ -74,19 +89,14 @@ class Dispatch:
                                          , fixation_metadata_keys=self.user_input['valid_asc_metadata_keys'][:, 1]
                                          , roi_metadata_keys=self.user_input['roi_event_map_metadata_keys']
                                          , test_trial_col=self.user_input['roi_event_map_trial_column']).result
-            self.results['fixation_roi'], self.results['fixation_roi_condensed'] = fix_roi_dfs
-            print('done: ', 'fixation_roi')
 
-        if not self.results['fixation_roi'].empty:
-            self.results['stimulus_locked_fixations'], self.results['response_locked_fixations'], self.results[
-                'stim_locked_summary'], \
-            self.results['stim_locked_summary_filtered'], self.results['resp_locked_summary'], self.results[
-                'resp_locked_summary_filtered'] = bin_fixations(self.results['trial_roi']
-                                                                , self.user_input['time_bin_size']
-                                                                , self.results['roi_event_map']
-                                                                , self.results['fixation_roi']
-                                                                , self.user_input['summary_filter_out']
-                                                                , self.user_input['summary_filter_for'])
+            self.results['fixation_roi'], self.results['fixation_roi_condensed'] = fix_roi_dfs
+            fixations_in_roi(self.results['fixations'], self.results['trial_roi'],
+                             self.results['fixation_roi_condensed'])
+            print('done: ', 'fixation_roi')
+        if not self.results['fixation_roi_condensed'].empty:
+            binning_results = BinningDispatch(self.user_input, self.results).bin_results
+            self.results.update(binning_results)
             print('done: ', 'stimulus_locked_fixations')
 
         if self.user_input['calculate_entropy']:
@@ -98,13 +108,11 @@ class Dispatch:
             else:
                 print('Do not have the required ASC or ROI Inputs to calculate entropy'
                       'Please check that ASC paths and ROI template information is valid.')
-'''
+
     def plotting_dispatch(self):
         if (self.user_input['plot_fixations']) & (not self.results['fixations'].empty):
             PlotFixations(self.results['fixations']
                           , self.results['trial_roi']
                           , self.user_input['output_directory_path']
                           , group_by=self.user_input['group_by']
-                          , shape=self.user_input['figure_shape']
-                          )
-'''
+                          , shape=self.user_input['figure_shape'])
