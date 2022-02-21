@@ -12,6 +12,7 @@ def create_result_paths(output_directory_path):
         ]
         , 'intermediate_roi': [
             'trial_roi'
+            , 'actual_coordinates'
             , 'test_resp_tag'
             , 'fixation_roi'
             , 'fixation_roi_condensed'
@@ -45,10 +46,7 @@ def pair_result_data(data_dict):
     path_dict = create_result_paths()
     paired = []
     for key, df in data_dict.items:
-        if key == 'trial_roi':
-            print(path_dict[key], df)
         if not df.empty:
-
             paired.append(path_dict[key], df)
     return paired
 
@@ -60,6 +58,7 @@ def initialize_result_dict():
         , 'behavior_test'
         , 'fixations'
         , 'filtered_asc'
+        , 'actual_coordinates'
         , 'trial_roi'
         , 'test_resp_tag'
         , 'fixation_roi'
