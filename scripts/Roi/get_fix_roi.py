@@ -30,9 +30,9 @@ class GetFixationRoi:
         self._roi = roi.reset_index()
         self._roi_metadata_keys = roi_metadata_keys
         self._test_trial_col = test_trial_col
-
-        if self._roi.loc[self._roi['stop'] == 'trial end', 'stop'].any():
-            self._roi = self.replace_trial_end()
+        if 'stop' in self._roi.columns:
+            if self._roi.loc[self._roi['stop'] == 'trial end', 'stop'].any():
+                self._roi = self.replace_trial_end()
 
         self.format_dfs()
         self.result = self.get_fixation_roi()
@@ -55,7 +55,7 @@ class GetFixationRoi:
     def get_fixation_roi(self):
         fix_roi = self.add_roi()
         valid_pairs = self.find_valid_pairings(fix_roi)
-        fix_roi[~fix_roi.index.isin(valid_pairs.index)] = np.nan  # If fixations arent in an roi, fill the row in NaN
+        fix_roi[~fix_roi.index.isin(valid_pairs.index)] = np.nan  # If fixations arent in an roi, fill the col in NaN
 
         if fix_roi.columns.isin(['start_roi', 'stop_roi']).all():
             fix_roi = self.get_constrained_time(fix_roi)
