@@ -7,16 +7,14 @@ if __name__ == "__main__":
         # Export Options
         'output_directory_path': None
         , 'output_folder_name': None
-        , 'attach_event_cols': None
-        , 'attach_movement_cols': None
 
         # Eye Movement Options
-        , 'asc_directory_path': ''
-        , 'asc_metadata_keys': []
+        , 'asc_directory_path': None
+        , 'asc_metadata_keys': None
 
         # Roi Template and iPosition Options
-        , 'roi_template_path': None
-        , 'calc_roi_raster_coords': True
+        , 'roi_template_path': ''
+        , 'calc_roi_raster_coords': False
         , 'aspect_ratio': ()
 
         , 'actual_coordinate_path': ''
@@ -26,10 +24,10 @@ if __name__ == "__main__":
         , 'roi_height': None
 
         # Roi Event Map Options
-        , 'roi_event_map_path': None
+        , 'roi_event_map_path': ''
         , 'roi_event_map_metadata_keys': []
-        , 'roi_event_map_trial_column': None
-        , 'roi_event_map_extension': None
+        , 'roi_event_map_trial_column': ''
+        , 'roi_event_map_extension': ''
 
         , 'roi_event_map_filename_contains': None
         , 'roi_event_map_import_skip_rows': None
@@ -47,7 +45,7 @@ if __name__ == "__main__":
         , 'summary_filter_for': None
 
         # Entropy Options
-        , 'calculate_entropy': True
+        , 'calculate_entropy': False
         , 'target_roi_entropy': None
         , 'exclude_diagonals': False
 
